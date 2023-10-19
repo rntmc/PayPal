@@ -10,7 +10,7 @@ paypal
           items: [
             {
               id: 1,
-              quantity: 2,
+              quantity: 1,
             }
           ],
         }),

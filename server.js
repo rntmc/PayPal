@@ -11,9 +11,24 @@ const bodyParser = require("body-parser") //sem ele o formulario retorna undefin
 app.use(bodyParser.urlencoded({extended:false}))
 import('node-fetch')
 
+//Cookies
+const cookieParser = require('cookie-parser')
+const expressSession = require('express-session')
+const credentials = require('./credentials')
+
+app.use(cookieParser(credentials.cookieSecret))
+app.use(expressSession({
+  resave: false,
+  saveUninitialized: false,
+  secret: credentials.cookieSecret,
+}))
+
+
 const paypal = require("@paypal/checkout-server-sdk")
 const Environment =
   process.env.NODE_ENV === "production" ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
+
+  // Configure as credenciais do PayPal
 const paypalClient = new paypal.core.PayPalHttpClient(
   new Environment(
     process.env.PAYPAL_CLIENT_ID,
@@ -28,8 +43,8 @@ app.get("/", (req, res) => {
   })
 })
 
-app.get("/user", (req, res) => {
-  res.render("user");
+app.get("/form", (req, res) => {
+  res.render("form");
 });
 
 const base = "https://api-m.sandbox.paypal.com"
@@ -51,37 +66,64 @@ const storeItems = new Map([
   [1, { price: 50, name: "Skateboard deck" }]
 ])
 
+
+
 app.post("/create-order", async (req, res) => {
+  let { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
   const { items } = req.body;
   generateAccessTokenFetch()
-  .then(access_token => {
-    let order_data_json = {
-      'intent': "CAPTURE",
-      'purchase_units': [{
-        'amount': {
-          'currency_code': 'USD',
-          'value': (items.reduce((total, item) => total + (storeItems.get(item.id).price * item.quantity), 0)).toFixed(2) // Calcula o valor total com base nos itens
-        }
-      }]
-    }
-    const data = JSON.stringify(order_data_json)
+    .then(access_token => {
+      let order_data_json = {
+        'intent': 'CAPTURE',
+        'purchase_units': [
+          {
+            'amount': {
+              'currency_code': 'USD',
+              'value': (
+                items.reduce((total, item) => total + storeItems.get(item.id).price * item.quantity, 0)
+              ).toFixed(2)
+            },
+            // 'shipping': {
+            //   'name': {
+            //     'full_name': `${username} ${usersurname}`
+            //   },
+            //   'address': {
+            //     'address_line_1': useraddress1,
+            //     'address_line_2': useraddress2,
+            //     'admin_area_2': usercity,
+            //     'admin_area_1': userstate,
+            //     'postal_code': userzip,
+            //     'country_code': usercountry
+            //   },
+            // }
+          }
+        ],
+      };
+      const data = JSON.stringify(order_data_json);
 
-    fetch("https://api-m.sandbox.paypal.com/v2/checkout/orders", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${access_token}`,
-        'PayPal-Request-Id': generate_random_uuid()
-      },
-      body: data
+      fetch('https://api-m.sandbox.paypal.com/v2/checkout/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${access_token}`,
+          'PayPal-Request-Id': generate_random_uuid()
+        },
+        body: data
+      })
+        .then(res => res.json())
+        .then(json => {
+          res.send(json);
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(500).send(err);
+        });
     })
-    .then(res => res.json())
-    .then(json => { res.send(json); })
-  }).catch(err => {
-    console.log(err);
-    res.status(500).send(err)
-  })
-}) 
+    .catch(err => {
+      console.log(err);
+      res.status(500).send(err);
+    });
+});
 
 
 
@@ -89,6 +131,21 @@ app.post("/create-order", async (req, res) => {
 app.post('/process', (req, res) => {
   // Obtenha os dados do formulário do corpo da solicitação
   const { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
+
+  // Crie um objeto com as informações do usuário
+  const userInformation = {
+    username,
+    usersurname,
+    usercountry,
+    useraddress1,
+    useraddress2,
+    usercity,
+    userstate,
+    userzip,
+  };
+
+  // Salve as informações do usuário nos cookies
+  res.cookie('userInformation', userInformation);
 
   // Crie a mensagem de agradecimento com detalhes dinâmicos
   const message = `Thank you! Your details have been updated!<br>${username} ${usersurname}<br>${useraddress1}, ${useraddress2}<br>${usercity}, ${userstate}, ${usercountry}<br>${userzip}`;
@@ -118,5 +175,34 @@ app.post('/process', (req, res) => {
 
   res.send(dynamicPage);
 });
+
+app.get('/user-profile', (req, res) => {
+  // Recupere as informações do cookie
+  const userInformation = req.cookies.userInformation;
+
+  // Renderize uma página onde o usuário pode visualizar e atualizar as informações
+  res.render('user-profile', { userInformation });
+});
+
+app.post('/update-user-information', (req, res) => {
+  // Recupere as novas informações do formulário
+  const updatedInformation = {
+    username: req.body.username,
+    usersurname: req.body.usersurname,
+    useraddress1: req.body.useraddress1,
+    useraddress2: req.body.useraddress2,
+    usercity: req.body.usercity,
+    userstate: req.body.userstate,
+    usercountry: req.body.usercountry,
+  };
+
+  // Armazene as informações atualizadas no cookie
+  res.cookie('userInformation', updatedInformation);
+
+  // Redirecione o usuário para a página de perfil ou outra página de sua escolha
+  res.redirect('/user-profile');
+});
+
+
 
 app.listen(3000)
