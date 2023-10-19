@@ -1,5 +1,6 @@
 
 *** Front-end ***
+
 [x]A web page to simulate a basic shopping cart page on a web store
 
 [x] It shows at least one product with its name, item number and price.
@@ -11,6 +12,7 @@
 [x] Button(s) to initiate a PayPal payment process, at least one of which should be a yellow “PayPal” one. These button(s) shall be rendered by the PayPal JS SDK (paypal.com/sdk/js)
 
 *** Back-end ***
+
 [x] The server program(s) shall implement use of a PayPal API that authenticates using oauth2 (client-id and secret keys) to generate an access token (on demand or cached) and make subsequent API calls.
 
 [x] The payment process shall be initiated by the user clicking the button mentioned above, which will call the PayPal API for setup.
