@@ -10,7 +10,7 @@ paypal
           items: [
             {
               id: 1,
-              quantity: 3,
+              quantity: 2,
             }
           ],
         }),
@@ -27,7 +27,25 @@ paypal
         })
     },
     onApprove: function (data, actions) {
-      return actions.order.capture()
+      return actions.order.capture().then(function(details) {
+        const transactionId = details.purchase_units[0].payments.captures[0].id;
+        
+        // Exibir a mensagem e o ID da transação no centro da tela
+        const messageElement = document.getElementById("message");
+        const transactionIdElement = document.getElementById("transaction-id");
+        
+        // Atualizar o conteúdo da mensagem e do ID da transação
+        transactionIdElement.textContent = transactionId;
+        messageElement.classList.remove("hidden");
+        
+        // Ocultar o botão do PayPal
+        const paypalButton = document.getElementById("paypal");
+        paypalButton.style.display = "none";
+      });
     },
+    onError: function(err) {
+      console.log(err)
+    },    
   })
   .render("#paypal")
+

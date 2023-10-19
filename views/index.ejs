@@ -4,11 +4,29 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="stylesheet" href="/stylesheets/style.css">
+  <title>Frame shop</title>
   <script src="https://www.paypal.com/sdk/js?client-id=<%= paypalClientId %>"></script>
   <script src="/script.js" defer></script>
+
 </head>
 <body>
-  <div id="paypal"></div>
+  <a href="/user">Account details</a>
+  <div class="container">
+    <h1>Frame Shop</h1>
+    <p>$50</p>
+    <img src="https://images.unsplash.com/photo-1520045892732-304bc3ac5d8e?auto=format&fit=crop&q=80&w=2070&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="">
+    <p> Picture of Sk8 grind taken in the streets of Slovakia</p>
+    <p>Ref: #2352</p>
+    <div id="paypal"></div>
+
+    <div id="paypal-container">
+      <div id="message" class="hidden">
+        <p>Transaction successful</p>
+        <p>Transaction ID: <span id="transaction-id"></span></p>
+      </div>
+    </div>
+    
+  </div>
 </body>
 </html>
