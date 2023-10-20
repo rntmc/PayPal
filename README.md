@@ -21,4 +21,4 @@
 
 [X] After the server creates a successful transaction, a thank you message, or page shall be displayed to the buyer. This should include the transaction ID created for the checkout process.
 
-PS: The PayPal button will not show up in Render, as the file .env has not been uploaded to Github. The .env file contains the PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET, however a copy of these IDs were provided in the Sandbox_account_details.md file
+PS: The PayPal button will not show up in Render, as the file .env has not been uploaded to Github. The .env file contains the PAYPAL_CLIENT_ID and PAYPAL_CLIENT_SECRET, however a copy of these IDs as well as a Paypal sandbox account information were provided in the Sandbox_account_details.md file.
