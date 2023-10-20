@@ -1,5 +1,5 @@
 The project was deployed at https://cyan-defiant-starfish.cyclic.cloud/, however the PayPal button was not showing up. 
-The website will work at localhost:3000 without any issue though.
+The website works at localhost:3000 without any issue though.
 
 
 *** Front-end ***
