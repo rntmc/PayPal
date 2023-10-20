@@ -1,18 +1,17 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/stylesheets/user-profile-style.css"> <!-- Se você tiver um arquivo de estilo personalizado -->
+  <link rel="stylesheet" href="/stylesheets/user-profile-style.css">
   <title>User Profile</title>
 </head>
 <body>
+  <div class="header-container">
+    <a href="/">Home</a>
+    <a href="/form">Update Information</a> 
+  </div>
   <div class="page">
-    <header>
-      <a href="/">Home</a>
-    </header>
-    <a href="/form">Update Information</a> <!-- Link para a página de atualização de informações -->
     <h2>User Details</h2>
 
     <% if (userInformation) { %>
@@ -27,7 +26,6 @@
     <% } else { %>
       <p>No user information found.</p>
     <% } %>
-    
   </div>
 </body>
 </html>

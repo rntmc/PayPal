@@ -15,7 +15,7 @@ paypal
           ],
         }),
       })
-        .then(res => {
+        .then(res => { 
           if (res.ok) return res.json()
           return res.json().then(json => Promise.reject(json))
         })
@@ -27,18 +27,19 @@ paypal
         })
     },
     onApprove: function (data, actions) {
-      return actions.order.capture().then(function(details) {
+      return actions.order.capture()
+        .then(function(details) {
         const transactionId = details.purchase_units[0].payments.captures[0].id;
         
-        // Exibir a mensagem e o ID da transação no centro da tela
+        // Shows Transaction ID 
         const messageElement = document.getElementById("message");
         const transactionIdElement = document.getElementById("transaction-id");
         
-        // Atualizar o conteúdo da mensagem e do ID da transação
+        // Updates content of message and transaction ID
         transactionIdElement.textContent = transactionId;
         messageElement.classList.remove("hidden");
         
-        // Ocultar o botão do PayPal
+        // Hide PayPal button after transaction confirmation
         const paypalButton = document.getElementById("paypal");
         paypalButton.style.display = "none";
       });

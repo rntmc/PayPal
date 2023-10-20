@@ -7,7 +7,7 @@ const app = express()
 app.set("view engine", "ejs")
 app.use(express.json())
 app.use(express.static(path.join(__dirname,'public')))
-const bodyParser = require("body-parser") //sem ele o formulario retorna undefined
+const bodyParser = require("body-parser") 
 app.use(bodyParser.urlencoded({extended:false}))
 import('node-fetch')
 
@@ -28,7 +28,6 @@ const paypal = require("@paypal/checkout-server-sdk")
 const Environment =
   process.env.NODE_ENV === "production" ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
 
-  // Configure as credenciais do PayPal
 const paypalClient = new paypal.core.PayPalHttpClient(
   new Environment(
     process.env.PAYPAL_CLIENT_ID,
@@ -58,7 +57,7 @@ async function generateAccessTokenFetch() {
     },
   });
   const data = await response.json(); //convert to json
-  return data.access_token; //retorna somente o token
+  return data.access_token; //returns token
 }
 
 
@@ -66,10 +65,8 @@ const storeItems = new Map([
   [1, { price: 50, name: "Skateboard deck" }]
 ])
 
-
-
 app.post("/create-order", async (req, res) => {
-  let { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
+  // let { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
   const { items } = req.body;
   generateAccessTokenFetch()
     .then(access_token => {
@@ -127,12 +124,11 @@ app.post("/create-order", async (req, res) => {
 
 
 
-/* Criacao de um endpoint para o formulario */
+//form endpoint
 app.post('/process', (req, res) => {
-  // Obtenha os dados do formulário do corpo da solicitação
   const { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
 
-  // Crie um objeto com as informações do usuário
+  // User info object
   const userInformation = {
     username,
     usersurname,
@@ -144,12 +140,13 @@ app.post('/process', (req, res) => {
     userzip,
   };
 
-  // Salve as informações do usuário nos cookies
+  // Save user info in cookies
   res.cookie('userInformation', userInformation);
 
-  // Crie a mensagem de agradecimento com detalhes dinâmicos
+  // User details update message
   const message = `Thank you! Your details have been updated!<br>${username} ${usersurname}<br>${useraddress1}, ${useraddress2}<br>${usercity}, ${userstate}, ${usercountry}<br>${userzip}`;
-  // Crie uma página HTML com a mensagem dinâmica
+  
+  // HTML page showing message and details 
   const dynamicPage = `
     <!DOCTYPE html>
     <html lang="en">
@@ -177,32 +174,10 @@ app.post('/process', (req, res) => {
 });
 
 app.get('/user-profile', (req, res) => {
-  // Recupere as informações do cookie
+  // Retrieve cookies info
   const userInformation = req.cookies.userInformation;
-
-  // Renderize uma página onde o usuário pode visualizar e atualizar as informações
+  // Render page where users can see their details
   res.render('user-profile', { userInformation });
 });
-
-app.post('/update-user-information', (req, res) => {
-  // Recupere as novas informações do formulário
-  const updatedInformation = {
-    username: req.body.username,
-    usersurname: req.body.usersurname,
-    useraddress1: req.body.useraddress1,
-    useraddress2: req.body.useraddress2,
-    usercity: req.body.usercity,
-    userstate: req.body.userstate,
-    usercountry: req.body.usercountry,
-  };
-
-  // Armazene as informações atualizadas no cookie
-  res.cookie('userInformation', updatedInformation);
-
-  // Redirecione o usuário para a página de perfil ou outra página de sua escolha
-  res.redirect('/user-profile');
-});
-
-
 
 app.listen(3000)
