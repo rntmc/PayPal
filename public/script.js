@@ -1,5 +1,12 @@
 paypal
   .Buttons({
+    style: {
+      shape: 'rect',
+      color: 'gold',
+      layout: 'vertical',
+      label: 'paypal',
+      
+    },
     createOrder: function () {
       return fetch("/create-order", {
         method: "POST",
