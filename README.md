@@ -1,7 +1,3 @@
-Please type "npm run devStart" to start the application. It works fine at localhost:3000/
-
-The website was deployed in Cyclic at https://cyan-defiant-starfish.cyclic.cloud/, however the PayPal button is not showing up there.
-The shipping address is not updating even though I followed the instructions. I left the script with comments in the file server.js
 
 *** Front-end ***
 [x]A web page to simulate a basic shopping cart page on a web store

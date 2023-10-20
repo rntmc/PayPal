@@ -52,14 +52,8 @@ async function generateAccessTokenFetch() {
   return data.access_token; //returns token
 }
 
-
-const storeItems = new Map([
-  [1, { price: 50, name: "Skateboard deck" }]
-])
-
 app.post("/create-order", async (req, res) => {
   // let { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
-  const { items } = req.body;
   generateAccessTokenFetch()
     .then(access_token => {
       let order_data_json = {
@@ -68,9 +62,7 @@ app.post("/create-order", async (req, res) => {
           {
             'amount': {
               'currency_code': 'USD',
-              'value': (
-                items.reduce((total, item) => total + storeItems.get(item.id).price * item.quantity, 0)
-              ).toFixed(2)
+              'value': '50.00'
             },
             // 'shipping': {
             //   'name': {

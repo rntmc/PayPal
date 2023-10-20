@@ -1,30 +1,40 @@
-  paypal_sdk
-    .Buttons({
-      createOrder: function () {
-        return fetch("/create-order", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            items: [
-              {
-                id: 1,
-                quantity: 1,
-              }
-            ],
-          }),
-        })
-          .then(res => { 
-            if (res.ok) return res.json()
-            return res.json().then(json => Promise.reject(json))
-          })
-          .then(({ id }) => {
-            return id
-          })
-          .catch(e => {
-            console.error(e.error)
-          })
+let url_to_head = (url) => {
+  return new Promise(function(resolve, reject) {
+      var script = document.createElement('script');
+      script.src = url;
+      script.onload = function() {
+          resolve();
+      };
+      script.onerror = function() {
+          reject('Error loading script.');
+      };
+      document.head.appendChild(script);
+  });
+}  
+  
+const paypal_sdk_url = "https://www.paypal.com/sdk/js";
+const client_id = "AZz_cSK44Eijk02IPpE5UMzKGdh-HTsACmDJY0WuJTiHKpdVsKMENfOYZ4q4rfF9LOs-xaExmXnJT0Pj"
+const currency = "USD";
+const intent = "capture";
+  
+
+url_to_head(`${paypal_sdk_url}?client-id=${client_id}&currency=${currency}&intent=${intent}`)
+  .then(() => {
+    let paypal_buttons = paypal.Buttons({
+      style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'paypal'
+      },
+      createOrder: function (data, actions) {
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: '50.00' 
+            }
+          }]
+        });
       },
       onApprove: function (data, actions) {
         return actions.order.capture()
@@ -49,3 +59,4 @@
       },    
     })
     .render("#paypal")
+});
