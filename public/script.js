@@ -1,5 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
-  paypal
+  paypal_sdk
     .Buttons({
       style: {
         shape: 'rect',
@@ -57,4 +56,3 @@ document.addEventListener("DOMContentLoaded", function() {
       },    
     })
     .render("#paypal")
-  });
