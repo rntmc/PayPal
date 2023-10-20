@@ -2,7 +2,7 @@
   "name": "paypal_test",
   "version": "1.0.0",
   "description": "",
-  "main": "script.js",
+  "main": "public/script.js",
   "scripts": {
     "devStart": "nodemon server.js"
   },
