@@ -10,31 +10,33 @@ let url_to_head = (url) => {
       };
       document.head.appendChild(script);
   });
-}  
-  
+}
+
 const paypal_sdk_url = "https://www.paypal.com/sdk/js";
-const client_id = "AZz_cSK44Eijk02IPpE5UMzKGdh-HTsACmDJY0WuJTiHKpdVsKMENfOYZ4q4rfF9LOs-xaExmXnJT0Pj"
+const client_id = "AZz_cSK44Eijk02IPpE5UMzKGdh-HTsACmDJY0WuJTiHKpdVsKMENfOYZ4q4rfF9LOs-xaExmXnJT0Pj";
 const currency = "USD";
 const intent = "capture";
-  
 
-url_to_head(`${paypal_sdk_url}?client-id=${client_id}&currency=${currency}&intent=${intent}`)
+
+url_to_head(paypal_sdk_url + "?client-id=" + client_id + "&enable-funding=venmo&currency=" + currency + "&intent=" + intent)
   .then(() => {
     let paypal_buttons = paypal.Buttons({
       style: {
         shape: 'rect',
         color: 'gold',
         layout: 'vertical',
-        label: 'paypal'
+        label: 'paypal',
       },
-      createOrder: function (data, actions) {
-        return actions.order.create({
-          purchase_units: [{
-            amount: {
-              value: '50.00' 
-            }
-          }]
-        });
+      createOrder: function(data, actions) {
+        return fetch("http://localhost:3000/create-order", {
+          method: "post",
+          headers: { "Content-Type": "application/json; charset=utf-8" },
+          body: JSON.stringify({ "intent": intent }),
+        })
+          .then((response) => response.json())
+          .then((order) => {
+            return order.id;
+          });
       },
       onApprove: function (data, actions) {
         return actions.order.capture()
@@ -50,13 +52,17 @@ url_to_head(`${paypal_sdk_url}?client-id=${client_id}&currency=${currency}&inten
           messageElement.classList.remove("hidden");
           
           // Hide PayPal button after transaction confirmation
-          const paypalButton = document.getElementById("paypal");
+          const paypalButton = document.getElementById("paypal-button");
           paypalButton.style.display = "none";
         });
       },
       onError: function(err) {
-        console.log(err)
-      },    
-    })
-    .render("#paypal")
-});
+        console.log(err);
+      },
+    });
+
+    paypal_buttons.render('#paypal-button');
+  })
+  .catch((error) => {
+    console.error(error);
+  });

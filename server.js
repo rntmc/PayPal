@@ -25,7 +25,7 @@ app.use(expressSession({
 
 
 const paypal = require("@paypal/checkout-server-sdk")
-const Environment =
+const Environment = 
   process.env.NODE_ENV === "production" ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
 
 app.get("/", (req, res) => {
@@ -62,7 +62,7 @@ app.post("/create-order", async (req, res) => {
           {
             'amount': {
               'currency_code': 'USD',
-              'value': '50.00'
+              'value': '10'
             },
             // 'shipping': {
             //   'name': {
