@@ -69,8 +69,8 @@ url_to_head(paypal_sdk_url + "?client-id=" + client_id + "&enable-funding=venmo&
             console.error("Erro ao capturar a transação:", error);
           });
       },
-      onError: function(err) {
-        console.log(err);
+      onError: function(error) {
+        console.log("Erro ao capturar a transação:", error);
       },
     });
 
