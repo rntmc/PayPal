@@ -40,37 +40,28 @@ url_to_head(paypal_sdk_url + "?client-id=" + client_id + "&enable-funding=venmo&
       },
       onApprove: function (data, actions) {
         return actions.order.capture()
-          .then(function(details) {
-            // Obtenha o ID da transação
+          .then(function (details) {
             const transactionId = details.purchase_units[0].payments.captures[0].id;
             
-            // Mostre o ID da transação
             const messageElement = document.getElementById("message");
             const transactionIdElement = document.getElementById("transaction-id");
       
-            // Certifique-se de que os elementos existam no DOM
             if (messageElement && transactionIdElement) {
-              // Atualize o conteúdo da mensagem e o ID da transação
               transactionIdElement.textContent = transactionId;
               messageElement.classList.remove("hidden");
-              
-              // Oculte o botão do PayPal após a confirmação da transação
+      
               const paypalButton = document.getElementById("paypal-button");
               if (paypalButton) {
                 paypalButton.style.display = "none";
-              } else {
-                console.error("Elemento do botão do PayPal não encontrado.");
               }
-            } else {
-              console.error("Elementos do DOM não encontrados.");
             }
           })
-          .catch(function(error) {
-            console.error("Erro ao capturar a transação:", error);
+          .catch(function (error) {
+            console.error("Transaction error: ", error);
           });
       },
       onError: function(error) {
-        console.log("Erro ao capturar a transação:", error);
+        console.log("Transaction error", error);
       },
     });
 
