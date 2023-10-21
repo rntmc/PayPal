@@ -1,5 +1,5 @@
 The website is hosted on the following link : https://test-cx6w.onrender.com
-
+In order to the PayPal button to work, the server must be running.
 
 *** Front-end ***
 [x]A web page to simulate a basic shopping cart page on a web store
