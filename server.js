@@ -14,11 +14,10 @@ import('node-fetch')
 
 app.use(cors({origin: 'https://test-cx6w.onrender.com'}));
 
-//Cookies
+
 const cookieParser = require('cookie-parser')
 const expressSession = require('express-session')
 const credentials = require('./credentials')
-
 app.use(cookieParser(credentials.cookieSecret))
 app.use(expressSession({
   resave: false,
@@ -28,8 +27,7 @@ app.use(expressSession({
 
 
 const paypal = require("@paypal/checkout-server-sdk")
-const Environment = 
-  process.env.NODE_ENV === "production" ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
+const Environment = process.env.NODE_ENV === "production" ? paypal.core.LiveEnvironment : paypal.core.SandboxEnvironment
 
 app.get("/", (req, res) => {
   res.render("index", {
@@ -43,7 +41,7 @@ app.get("/form", (req, res) => {
 
 const base = "https://api-m.sandbox.paypal.com"
 async function generateAccessTokenFetch() {
-  const response = await fetch(base + "/v1/oauth2/token", { // pass URL as the initial argument
+  const response = await fetch(base + "/v1/oauth2/token", {
     method: "POST",
     body: "grant_type=client_credentials",
     headers: {
@@ -51,8 +49,8 @@ async function generateAccessTokenFetch() {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
   });
-  const data = await response.json(); //convert to json
-  return data.access_token; //returns token
+  const data = await response.json(); 
+  return data.access_token; 
 }
 
 app.post("/create-order", async (req, res) => {
@@ -65,7 +63,7 @@ app.post("/create-order", async (req, res) => {
           {
             'amount': {
               'currency_code': 'USD',
-              'value': '10'
+              'value': '50'
             },
             // 'shipping': {
             //   'name': {
@@ -111,11 +109,10 @@ app.post("/create-order", async (req, res) => {
 
 
 
-//form endpoint
+
 app.post('/process', (req, res) => {
   const { username, usersurname, usercountry, useraddress1, useraddress2, usercity, userstate, userzip } = req.body;
 
-  // User info object
   const userInformation = {
     username,
     usersurname,
@@ -127,13 +124,11 @@ app.post('/process', (req, res) => {
     userzip,
   };
 
-  // Save user info in cookies
+
   res.cookie('userInformation', userInformation);
 
-  // User details update message
   const message = `Thank you! Your details have been updated!<br>${username} ${usersurname}<br>${useraddress1}, ${useraddress2}<br>${usercity}, ${userstate}, ${usercountry}<br>${userzip}`;
-  
-  // HTML page showing message and details 
+
   const dynamicPage = `
     <!DOCTYPE html>
     <html lang="en">
@@ -161,9 +156,8 @@ app.post('/process', (req, res) => {
 });
 
 app.get('/user-profile', (req, res) => {
-  // Retrieve cookies info
+
   const userInformation = req.cookies.userInformation;
-  // Render page where users can see their details
   res.render('user-profile', { userInformation });
 });
 
