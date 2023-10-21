@@ -1,3 +1,5 @@
+The website is hosted on the following link : https://test-cx6w.onrender.com
+
 
 *** Front-end ***
 [x]A web page to simulate a basic shopping cart page on a web store
