@@ -4,12 +4,15 @@ var path = require('path')
 const { v4: generate_random_uuid } = require('uuid');
 const express = require("express")
 const app = express()
+const cors = require('cors')
 app.set("view engine", "ejs")
 app.use(express.json())
 app.use(express.static(path.join(__dirname,'public')))
 const bodyParser = require("body-parser") 
 app.use(bodyParser.urlencoded({extended:false}))
 import('node-fetch')
+
+app.use(cors({origin: 'https://test-cx6w.onrender.com'}));
 
 //Cookies
 const cookieParser = require('cookie-parser')
