@@ -17,8 +17,6 @@ In order for the PayPal button to work, the server must be running.
 
 [x] The payment process shall be initiated by the user clicking the button mentioned above, which will call the PayPal API for setup.
 
-[] The buyer’s pre-filled information shall be passed to PayPal in this setup so that the buyer does not have to input any of her information on PayPal again (although a buyer account with different shipping information might be used for checkout)
-
 [x] After the payer approves the payment at PayPal and returns, the server shall capture/execute the set-up payment so that a PayPal transaction is created.
 
 [X] After the server creates a successful transaction, a thank you message, or page shall be displayed to the buyer. This should include the transaction ID created for the checkout process.
